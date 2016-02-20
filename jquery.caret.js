@@ -1,16 +1,17 @@
 (function($) {
   $.fn.caret = function(pos) {
     var target = this[0];
-	var isContentEditable = target.contentEditable === 'true';
+    var isContentEditable = target.contentEditable === 'true';
+    var range, range1, range2;
     //get
-    if (arguments.length == 0) {
+    if (arguments.length === 0) {
       //HTML5
       if (window.getSelection) {
         //contenteditable
         if (isContentEditable) {
           target.focus();
-          var range1 = window.getSelection().getRangeAt(0),
-              range2 = range1.cloneRange();
+          range1 = window.getSelection().getRangeAt(0);
+          range2 = range1.cloneRange();
           range2.selectNodeContents(target);
           range2.setEnd(range1.endContainer, range1.endOffset);
           return range2.toString().length;
@@ -23,17 +24,17 @@
         target.focus();
         //contenteditable
         if (isContentEditable) {
-            var range1 = document.selection.createRange(),
-                range2 = document.body.createTextRange();
+            range1 = document.selection.createRange();
+            range2 = document.body.createTextRange();
             range2.moveToElementText(target);
             range2.setEndPoint('EndToEnd', range1);
             return range2.text.length;
         }
         //textarea
-        var pos = 0,
-            range = target.createTextRange(),
-            range2 = document.selection.createRange().duplicate(),
-            bookmark = range2.getBookmark();
+        pos = 0;
+        range = target.createTextRange();
+        range2 = document.selection.createRange().duplicate();
+        var bookmark = range2.getBookmark();
         range.moveToBookmark(bookmark);
         while (range.moveStart('character', -1) !== 0) pos++;
         return pos;
@@ -61,13 +62,13 @@
     //IE<9
     else if (document.body.createTextRange) {
       if (isContentEditable) {
-        var range = document.body.createTextRange();
+        range = document.body.createTextRange();
         range.moveToElementText(target);
         range.moveStart('character', pos);
         range.collapse(true);
         range.select();
       } else {
-        var range = target.createTextRange();
+        range = target.createTextRange();
         range.move('character', pos);
         range.select();
       }
